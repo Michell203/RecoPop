@@ -1,13 +1,42 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
+//import '../web-api-examples/authentication/authorization_code'
+
+function FindSong(event) {
+  // Use the searchQuery variable to perform search operation
+  //console.log(`Performing search for "${searchQuery}"...`);
+  
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  //const [count, setCount] = useState(0)
+  const [searchQuery, setSearchQuery] = useState("");
+  const [userInput, setUserInput] = useState("");
+
+  const handleInput = (event) => {
+    setUserInput(event.target.value);
+  };
 
   return (
     <div className="App">
-      <div>
+
+      <input
+      type="text"
+      placeholder='Recommend a track/album/artist'
+      value={userInput}
+      onChange={handleInput}
+      />
+      <button onClick={FindSong}>Post</button>
+      <h1>{userInput}</h1>
+
+    </div>
+  )
+}
+
+export default App
+
+{/* <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src="/vite.svg" className="logo" alt="Vite logo" />
         </a>
@@ -26,9 +55,4 @@ function App() {
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
-}
-
-export default App
+      </p> */}
