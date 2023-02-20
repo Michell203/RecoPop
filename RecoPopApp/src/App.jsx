@@ -6,8 +6,8 @@ import {client_id, client_secret, redirect_uri} from '../hidden'
 
 function App() {
   //const [count, setCount] = useState(0)
-  const [searchQuery, setSearchQuery] = useState("");
-  const [accessToekn, setAccessToekn] = useState("");
+  const [track, setTrack] = useState("");
+  const [accessToken, setAccessToken] = useState("");
   const [userInput, setUserInput] = useState("");
 
   useEffect(() => {
@@ -22,7 +22,7 @@ function App() {
 
     fetch('https://accounts.spotify.com/api/token',parameters)
       .then(result => result.json())
-      .then(track => setAccessToekn(track.access_token))
+      .then(data => setAccessToken(data.access_token))
 
   }, [])
 
@@ -31,11 +31,31 @@ function App() {
   };
 
   async function FindSong(event) {
-    // Use the searchQuery variable to perform search operation
-    //console.log(`Performing search for "${searchQuery}"...`);
-    console.log("Searching for " + userInput)
+    //console.log("Searching for " + userInput)
 
-    var trackID = await fetch('https://api.spotify.com/v1/search')
+    //Search for trackID
+    var trackParameters= {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + accessToken
+      }
+    }
+
+    var trackID = await fetch('https://api.spotify.com/v1/search?q='+userInput+'&type=track' ,trackParameters)
+      .then(response => response.json())
+      .then(data => { return data.tracks.items[0].id})
+
+    console.log("track ID is " + trackID);
+    setTrack(trackID);
+
+    //Get request with trackID to get the track
+    // var returnedTrack = await fetch('https://api.spotify.com/v1/tracks/' + trackID + '?include_groups=preview_url',trackParameters)
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     console.log(data);
+    //   });
+
   }
 
   return (
@@ -43,12 +63,16 @@ function App() {
 
       <input
       type="text"
-      placeholder='Recommend a track/album/artist'
+      placeholder='Recommend a track'
       value={userInput}
       onChange={handleInput}
       />
       <button onClick={FindSong}>Post</button>
       <h1>{userInput}</h1>
+      <iframe style={{borderRadius: 12 + 'px'}} src={"https://open.spotify.com/embed/track/" + track + "?utm_source=generator"}
+      width="100%" height="152" frameBorder="0" allowFullScreen="" 
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+      loading="lazy"></iframe>
 
     </div>
   )
