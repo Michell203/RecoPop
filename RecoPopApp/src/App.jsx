@@ -1,22 +1,42 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
+import {client_id, client_secret, redirect_uri} from '../hidden' 
 //import '../web-api-examples/authentication/authorization_code'
-
-function FindSong(event) {
-  // Use the searchQuery variable to perform search operation
-  //console.log(`Performing search for "${searchQuery}"...`);
-  
-}
 
 function App() {
   //const [count, setCount] = useState(0)
   const [searchQuery, setSearchQuery] = useState("");
+  const [accessToekn, setAccessToekn] = useState("");
   const [userInput, setUserInput] = useState("");
+
+  useEffect(() => {
+    //API Access token
+    var parameters = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: 'grant_type=client_credentials&client_id='+client_id+'&client_secret='+client_secret
+    }
+
+    fetch('https://accounts.spotify.com/api/token',parameters)
+      .then(result => result.json())
+      .then(track => setAccessToekn(track.access_token))
+
+  }, [])
 
   const handleInput = (event) => {
     setUserInput(event.target.value);
   };
+
+  async function FindSong(event) {
+    // Use the searchQuery variable to perform search operation
+    //console.log(`Performing search for "${searchQuery}"...`);
+    console.log("Searching for " + userInput)
+
+    var trackID = await fetch('https://api.spotify.com/v1/search')
+  }
 
   return (
     <div className="App">
