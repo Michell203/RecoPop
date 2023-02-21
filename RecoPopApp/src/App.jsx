@@ -7,6 +7,7 @@ import {client_id, client_secret, redirect_uri} from '../hidden'
 function App() {
   //const [count, setCount] = useState(0)
   const [track, setTrack] = useState("");
+  const [iframe, setIFrame] = useState([]);
   const [accessToken, setAccessToken] = useState("");
   const [userInput, setUserInput] = useState("");
 
@@ -25,6 +26,16 @@ function App() {
       .then(data => setAccessToken(data.access_token))
 
   }, [])
+
+  function FrameComponent(ID){
+    console.log("In framecomponent")
+    return (
+      <iframe style={{borderRadius: 12 + 'px', marginBottom: '10px', marginTop: '10px'}} src={"https://open.spotify.com/embed/track/" + ID + "?utm_source=generator"}
+      width="600px" height="152" frameBorder="0" allowFullScreen="" margin-top="20px" 
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+      loading="lazy"></iframe>
+    );
+  }
 
   const handleInput = (event) => {
     setUserInput(event.target.value);
@@ -49,54 +60,29 @@ function App() {
     console.log("track ID is " + trackID);
     setTrack(trackID);
 
-    //Get request with trackID to get the track
-    // var returnedTrack = await fetch('https://api.spotify.com/v1/tracks/' + trackID + '?include_groups=preview_url',trackParameters)
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     console.log(data);
-    //   });
+    const newIframe = FrameComponent(trackID);
+    setIFrame([newIframe, ...iframe]);
 
   }
 
   return (
     <div className="App">
 
-      <input
-      type="text"
-      placeholder='Recommend a track'
-      value={userInput}
-      onChange={handleInput}
-      />
-      <button onClick={FindSong}>Post</button>
-      <h1>{userInput}</h1>
-      <iframe style={{borderRadius: 12 + 'px'}} src={"https://open.spotify.com/embed/track/" + track + "?utm_source=generator"}
-      width="100%" height="152" frameBorder="0" allowFullScreen="" 
-      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-      loading="lazy"></iframe>
+      <div className="container">
+
+        <input
+        className='recommend'
+        type="text"
+        placeholder='Recommend a track'
+        value={userInput}
+        onChange={handleInput}
+        />
+        <button className='post' onClick={FindSong}>Post</button>
+      </div>
+      {iframe}
 
     </div>
   )
 }
 
 export default App
-
-{/* <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p> */}
