@@ -30,10 +30,12 @@ function App() {
   function FrameComponent(ID){
     console.log("In framecomponent")
     return (
+      <div>
       <iframe style={{borderRadius: 12 + 'px', marginBottom: '10px', marginTop: '10px'}} src={"https://open.spotify.com/embed/track/" + ID + "?utm_source=generator"}
       width="600px" height="152" frameBorder="0" allowFullScreen="" margin-top="20px" 
       allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
       loading="lazy"></iframe>
+      </div>
     );
   }
 
